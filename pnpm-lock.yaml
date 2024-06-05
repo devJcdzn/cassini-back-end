@@ -31,6 +31,9 @@ dependencies:
     version: 3.23.8
 
 devDependencies:
+  '@tsconfig/node20':
+    specifier: ^20.1.4
+    version: 20.1.4
   '@types/jsonwebtoken':
     specifier: ^9.0.6
     version: 9.0.6
@@ -1433,6 +1436,10 @@ packages:
       '@smithy/types': 3.0.0
       tslib: 2.6.3
     dev: false
+
+  /@tsconfig/node20@20.1.4:
+    resolution: {integrity: sha512-sqgsT69YFeLWf5NtJ4Xq/xAF8p4ZQHlmGW74Nu2tD4+g5fAsposc4ZfaaPixVu4y01BEiDCWLRDCvDM5JOsRxg==}
+    dev: true
 
   /@types/jsonwebtoken@9.0.6:
     resolution: {integrity: sha512-/5hndP5dCjloafCXns6SZyESp3Ldq7YjH3zwzwczYnjxIT0Fqzk5ROSYVGfFyczIue7IUEj8hkvLbPoLQ18vQw==}

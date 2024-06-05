@@ -5,6 +5,10 @@ const envSchema = z.object({
   CLOUDFLARE_ACCESS_KEY_ID: z.string(),
   CLOUDFLARE_ENDPOINT: z.string().url(),
   CLOUDFLARE_ACCESS_KEY_SECRET: z.string(),
+  JWT_SECRET: z.string(),
+  BASE_URL: z.string().url(),
+  MAIL_USER: z.string(),
+  MAIL_PASS: z.string(),
 });
 
 export const env = envSchema.parse(process.env);

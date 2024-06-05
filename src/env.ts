@@ -11,6 +11,7 @@ const envSchema = z.object({
   MAIL_PASS: z.string(),
   STRIPE_PUBLISHABLE_KEY: z.string(),
   STRIPE_SECRET_KEY: z.string(),
+  WEBHOOK_SECRET: z.string(),
 });
 
 export const env = envSchema.parse(process.env);

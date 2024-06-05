@@ -30,7 +30,10 @@ export async function createCheckout(
       });
     }
 
-    const checkout = await createCheckoutSession(userExists.id);
+    const checkout = await createCheckoutSession(
+      userExists.id,
+      userExists.email
+    );
 
     if (!checkout) {
       return reply.send({

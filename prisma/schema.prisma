@@ -30,8 +30,9 @@ model User {
   name  String
   email String @unique
 
-  stripeCustomerId     String?
-  strupeSubscriptionId String?
+  stripeCustomerId         String?
+  stripeSubscriptionId     String?
+  stripeSubscriptionStatus String?
 
   File File[]
 

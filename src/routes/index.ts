@@ -4,6 +4,7 @@ import { usersRoutes } from "./users";
 import { authRoutes } from "./auth";
 import { authenticate } from "../middleware/middleware";
 import { subscriptionRoutes } from "./subscription";
+import { webhookRoutes } from "./webhooks";
 
 export async function registerRoutes(app: FastifyInstance) {
   try {
@@ -22,6 +23,7 @@ export async function registerRoutes(app: FastifyInstance) {
       { prefix: "/checkout" }
     );
     await app.register(authRoutes);
+    await app.register(webhookRoutes, { prefix: "/stripe" });
     await app.register(usersRoutes, { prefix: "/users" });
   } catch (err) {
     console.error(err);

@@ -6,6 +6,7 @@ import {
   updateUserBodySchema,
   updateUserParamsSchema,
 } from "../lib/user-schemas";
+import { createStripeCustomer } from "../lib/stripe";
 
 export async function createUser(request: FastifyRequest, reply: FastifyReply) {
   const { name, email } = createUserBodySchema.parse(request.body);
@@ -25,10 +26,13 @@ export async function createUser(request: FastifyRequest, reply: FastifyReply) {
     return;
   }
 
+  const customer = await createStripeCustomer({ email, name });
+
   const newUser = await prisma.user.create({
     data: {
       name,
       email,
+      stripeCustomerId: customer.id,
     },
     select: {
       id: true,

@@ -12,7 +12,6 @@ export async function authenticate(
 ) {
   try {
     const authHeader = request.headers.authorization;
-    console.log({ authHeader });
 
     if (!authHeader || !authHeader?.startsWith("Bearer ")) {
       return reply.code(401).send({

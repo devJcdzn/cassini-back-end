@@ -18,6 +18,7 @@
     "fastify": "^4.27.0",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.13",
+    "stripe": "^15.9.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

@@ -3,6 +3,7 @@ import { fileRoutes } from "./uploads";
 import { usersRoutes } from "./users";
 import { authRoutes } from "./auth";
 import { authenticate } from "../middleware/middleware";
+import { subscriptionRoutes } from "./subscription";
 
 export async function registerRoutes(app: FastifyInstance) {
   try {
@@ -12,6 +13,13 @@ export async function registerRoutes(app: FastifyInstance) {
         fileRoutes(app);
       },
       { prefix: "/uploads" }
+    );
+    await app.register(
+      async (app) => {
+        app.addHook("onRequest", authenticate);
+        subscriptionRoutes(app);
+      },
+      { prefix: "/checkout" }
     );
     await app.register(authRoutes);
     await app.register(usersRoutes, { prefix: "/users" });

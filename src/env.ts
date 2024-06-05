@@ -9,6 +9,8 @@ const envSchema = z.object({
   BASE_URL: z.string().url(),
   MAIL_USER: z.string(),
   MAIL_PASS: z.string(),
+  STRIPE_PUBLISHABLE_KEY: z.string(),
+  STRIPE_SECRET_KEY: z.string(),
 });
 
 export const env = envSchema.parse(process.env);

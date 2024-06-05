@@ -30,6 +30,9 @@ model User {
   name  String
   email String @unique
 
+  stripeCustomerId     String?
+  strupeSubscriptionId String?
+
   File File[]
 
   createdAt DateTime @default(now())

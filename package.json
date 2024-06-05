@@ -1,0 +1,27 @@
+{
+  "name": "cassini",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch --env-file .env src/http/server.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.590.0",
+    "@aws-sdk/s3-request-presigner": "^3.590.0",
+    "@prisma/client": "^5.15.0",
+    "axios": "^1.7.2",
+    "fastify": "^4.27.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.1",
+    "prisma": "^5.15.0",
+    "tsx": "^4.11.2",
+    "typescript": "^5.4.5"
+  }
+}

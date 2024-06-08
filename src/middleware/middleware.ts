@@ -95,15 +95,14 @@ export async function checkQuota(request: FastifyRequest, reply: FastifyReply) {
         );
       });
 
-      if (userFilesThisMonth.length >= 5) {
+      if (userFilesThisMonth.length >= 2) {
         return reply.code(403).send({
           error: "You're exceeded your monthly quota.",
         });
       }
     }
-
-    return reply.send(undefined);
   } catch (err) {
     console.error(err);
+    return reply.code(400);
   }
 }

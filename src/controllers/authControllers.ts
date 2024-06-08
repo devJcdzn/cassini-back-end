@@ -36,11 +36,11 @@ export async function requestMagicLink(
     const magicLink = `${env.BASE_URL}/validate-magic-link?token=${token}`;
 
     // function to send email
-    // sendMail({
-    //   to: email,
-    //   subject: "Your Magic Link to Login",
-    //   text: `<a href="${magicLink}"} style={{color: "#3d8"}}>Click here to login</a>`,
-    // });
+    sendMail({
+      to: email,
+      subject: "Your Magic Link to Login",
+      text: `<a href="${magicLink}"} style={{color: "#3d8"}}>Click here to login</a>`,
+    });
 
     // sendAuthEmail(userExists.email, userExists.name);
 

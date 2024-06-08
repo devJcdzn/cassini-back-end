@@ -50,3 +50,60 @@ export async function authenticate(
     });
   }
 }
+
+export async function checkQuota(request: FastifyRequest, reply: FastifyReply) {
+  const userId = request.user?.id;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        File: true,
+      },
+    });
+
+    if (!user) {
+      return reply.status(401).send({
+        error: "Unauthorized",
+        message: null,
+        data: null,
+      });
+    }
+
+    const currentDate = new Date();
+    const firstDayOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1
+    );
+    const lastDayOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      0
+    );
+
+    const hasSubscription =
+      user.stripeSubscriptionId && user.stripeSubscriptionStatus === "active";
+
+    if (!hasSubscription) {
+      const userFilesThisMonth = user.File.filter((file) => {
+        const fileCreatedAt = new Date(file.createdAt);
+        return (
+          fileCreatedAt >= firstDayOfMonth && fileCreatedAt <= lastDayOfMonth
+        );
+      });
+
+      if (userFilesThisMonth.length >= 5) {
+        return reply.code(403).send({
+          error: "You're exceeded your monthly quota.",
+        });
+      }
+    }
+
+    return reply.send(undefined);
+  } catch (err) {
+    console.error(err);
+  }
+}

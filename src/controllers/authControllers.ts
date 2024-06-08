@@ -6,7 +6,7 @@ import {
 import { prisma } from "../db/prisma";
 import jwt from "jsonwebtoken";
 import { env } from "../env";
-import { sendMail } from "../lib/email";
+import { sendAuthEmail, sendMail } from "../lib/email";
 
 const SECRET_KEY = env.JWT_SECRET;
 
@@ -36,11 +36,13 @@ export async function requestMagicLink(
     const magicLink = `${env.BASE_URL}/validate-magic-link?token=${token}`;
 
     // function to send email
-    sendMail({
-      to: email,
-      subject: "Your Magic Link to Login",
-      text: `<a href="${magicLink}"} style={{color: "#3d8"}}>Click here to login</a>`,
-    });
+    // sendMail({
+    //   to: email,
+    //   subject: "Your Magic Link to Login",
+    //   text: `<a href="${magicLink}"} style={{color: "#3d8"}}>Click here to login</a>`,
+    // });
+
+    // sendAuthEmail(userExists.email, userExists.name);
 
     return reply.code(200).send({
       error: null,

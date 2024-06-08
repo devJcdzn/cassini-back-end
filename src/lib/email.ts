@@ -1,3 +1,4 @@
+import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
 import nodemailer from "nodemailer";
 import { env } from "../env";
 
@@ -23,4 +24,46 @@ export async function sendMail({ to, subject, text }: IMail) {
     subject,
     html: text,
   });
+}
+
+export async function sendWelcomeEmail(email: string, name: string) {
+  const mailerSend = new MailerSend({
+    apiKey: process.env.MAILER_SEND_TOKEN!,
+  });
+
+  const sentFrom = new Sender(
+    "test@trial-neqvygme7p840p7w.mlsender.net",
+    "Support Cassini"
+  );
+  const recipients = [new Recipient(email, name)];
+
+  const emailParams = new EmailParams()
+    .setFrom(sentFrom)
+    .setTo(recipients)
+    .setReplyTo(sentFrom)
+    .setSubject("Bem vindo")
+    .setText("Bem vindoo!!");
+
+  await mailerSend.email.send(emailParams);
+}
+
+export async function sendAuthEmail(email: string, name: string) {
+  const mailerSend = new MailerSend({
+    apiKey: process.env.MAILER_SEND_TOKEN!,
+  });
+
+  const sentFrom = new Sender(
+    "test@trial-neqvygme7p840p7w.mlsender.net",
+    "Support Cassini"
+  );
+  const recipients = [new Recipient(email, name)];
+
+  const emailParams = new EmailParams()
+    .setFrom(sentFrom)
+    .setTo(recipients)
+    .setReplyTo(sentFrom)
+    .setSubject("Auth")
+    .setTemplateId("0p7kx4x63yv49yjr");
+
+  await mailerSend.email.send(emailParams);
 }

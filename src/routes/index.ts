@@ -15,6 +15,9 @@ export async function registerRoutes(app: FastifyInstance) {
       },
       { prefix: "/uploads" }
     );
+
+    // await app.register(fileRoutes, { prefix: "/uploads" }); // Route without middleware
+
     await app.register(
       async (app) => {
         app.addHook("onRequest", authenticate);

@@ -7,7 +7,8 @@ import {
 } from "../controllers/fileController";
 
 export async function fileRoutes(app: FastifyInstance) {
-  app.post("/", { preHandler: checkQuota }, uploadFile);
+  // app.post("/", { preHandler: checkQuota }, uploadFile);
+  app.post("/", uploadFile);
   app.get("/", getRecentFiles);
   app.get("/:id", getFile);
 }

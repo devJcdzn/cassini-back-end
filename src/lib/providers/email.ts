@@ -1,6 +1,6 @@
 import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
 import nodemailer from "nodemailer";
-import { env } from "../env";
+import { env } from "../../env";
 
 const transporter = nodemailer.createTransport({
   host: "sandbox.smtp.mailtrap.io",

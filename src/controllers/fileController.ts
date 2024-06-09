@@ -1,30 +1,55 @@
 import { prisma } from "../db/prisma";
-import { r2 } from "../lib/cloudflare";
+import { r2 } from "../lib/providers/cloudflare";
+import { FastifyRequest, FastifyReply } from "fastify";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+
 import { randomUUID } from "crypto";
-import { getUploadsParamsSchema, uploadBodySchema } from "../lib/schemas";
-import { FastifyRequest, FastifyReply } from "fastify";
+
+import {
+  getUploadsParamsSchema,
+  uploadBodySchema,
+} from "../lib/schemas/upload-schemas";
+import {
+  bannedMimeTypes,
+  isFileAllowed,
+  isFileSizeAllowed,
+} from "../lib/utils/file-check";
 
 export async function uploadFile(request: FastifyRequest, reply: FastifyReply) {
-  const { name, contentType } = uploadBodySchema.parse(request.body);
-  const userId = request.user?.id;
+  const { name, contentType, size } = uploadBodySchema.parse(request.body);
+  // const userId = request.user?.id;
 
   try {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-      include: {
-        File: true,
-      },
-    });
+    // Logic to add e user owner for a file
+    // const user = await prisma.user.findUnique({
+    //   where: {
+    //     id: userId,
+    //   },
+    //   include: {
+    //     File: true,
+    //   },
+    // });
 
-    if (!user) {
-      return reply.status(401).send({
-        error: "Unauthorized",
-        message: null,
-        data: null,
+    // if (!user) {
+    //   return reply.status(401).send({
+    //     error: "Unauthorized",
+    //     message: null,
+    //     data: null,
+    //   });
+    // }
+
+    const fileIsAllowed =
+      isFileAllowed(contentType, bannedMimeTypes) && isFileSizeAllowed(size);
+
+    if (!fileIsAllowed) {
+      return reply.code(400).send({
+        error: "File Type is not Allowed",
+        message: "please check banned MIME types or max upload size",
+        data: {
+          bannedMimeTypes,
+          sizeAllowed: "1Gb",
+        },
       });
     }
 
@@ -45,7 +70,7 @@ export async function uploadFile(request: FastifyRequest, reply: FastifyReply) {
         name,
         contentType,
         key: fileKey,
-        ownerId: user.id,
+        // ownerId: user.id,
       },
     });
 

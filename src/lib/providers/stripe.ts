@@ -1,7 +1,7 @@
 import Stripe from "stripe";
-import { config } from "../config";
-import { env } from "../env";
-import { prisma } from "../db/prisma";
+import { config } from "../../config";
+import { env } from "../../env";
+import { prisma } from "../../db/prisma";
 
 export const stripe = new Stripe(config.stripe.secretKey, {
   apiVersion: "2024-04-10",

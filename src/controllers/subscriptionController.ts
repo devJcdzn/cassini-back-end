@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { prisma } from "../db/prisma";
-import { createCheckoutSession } from "../lib/stripe";
+import { createCheckoutSession } from "../lib/providers/stripe";
 
 export async function createCheckout(
   request: FastifyRequest,

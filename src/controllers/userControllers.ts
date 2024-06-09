@@ -5,9 +5,9 @@ import {
   getUserParamsSchema,
   updateUserBodySchema,
   updateUserParamsSchema,
-} from "../lib/user-schemas";
-import { createStripeCustomer } from "../lib/stripe";
-import { sendWelcomeEmail } from "../lib/email";
+} from "../lib/schemas/user-schemas";
+import { createStripeCustomer } from "../lib/providers/stripe";
+import { sendWelcomeEmail } from "../lib/providers/email";
 
 export async function createUser(request: FastifyRequest, reply: FastifyReply) {
   const { name, email } = createUserBodySchema.parse(request.body);

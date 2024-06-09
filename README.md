@@ -6,21 +6,21 @@ Stack: Node,js, Fastify, PrismaORM, Cloudflare R2.
 
 ### Functional requirements
 
-- [ ] It must be possible to upload;
+- [x] It must be possible to upload;
 - [ ] It should be possible to view the last 5 uploads;
 
 ### Business roles
 
-- [ ] Uploads should be removed after seven days;
+- [x] Uploads should be removed after seven days;
 - [ ] It should only be possible to view unexpired uploads;
-- [ ] It should only be possible to upload secure files;
-- [ ] It should only be possible to upload files up to 1Gb each;
+- [x] It should only be possible to upload secure files;
+- [x] It should only be possible to upload files up to 1Gb each;
 
 ### Non functional requirements
 
-- [ ] Use Cloudflare R2 to upload files;
-- [ ] Upload must be done directly by front-end using Presigned URLs;
-- [ ] SHaring links must be signed to prevent public access.
+- [x] Use Cloudflare R2 to upload files;
+- [x] Upload must be done directly by front-end using Presigned URLs;
+- [x] Sharing links must be signed to prevent public access.
 
 ## Important notes
 

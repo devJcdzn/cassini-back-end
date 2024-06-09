@@ -1,12 +1,15 @@
 import { app } from "../app";
 
 import { prisma } from "../db/prisma";
-import { r2 } from "../lib/cloudflare";
+import { r2 } from "../lib/providers/cloudflare";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { randomUUID } from "crypto";
-import { getUploadsParamsSchema, uploadBodySchema } from "../lib/schemas";
+import {
+  getUploadsParamsSchema,
+  uploadBodySchema,
+} from "../lib/schemas/upload-schemas";
 
 // app.get("/", () => {
 //   return "Hello world";

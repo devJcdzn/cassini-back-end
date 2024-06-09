@@ -4,7 +4,7 @@ import {
   handleProcessWebhookCheckout,
   handleProcessWebhookUpdateSubscription,
   stripe,
-} from "../lib/stripe";
+} from "../lib/providers/stripe";
 import Stripe from "stripe";
 
 export async function stripeWebhook(

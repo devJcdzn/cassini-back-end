@@ -2,11 +2,11 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import {
   requestMagicLinkBodySchema,
   validateMagicLinkQuerySchema,
-} from "../lib/auth-schemas";
+} from "../lib/schemas/auth-schemas";
 import { prisma } from "../db/prisma";
 import jwt from "jsonwebtoken";
 import { env } from "../env";
-import { sendAuthEmail, sendMail } from "../lib/email";
+import { sendAuthEmail, sendMail } from "../lib/providers/email";
 
 const SECRET_KEY = env.JWT_SECRET;
 

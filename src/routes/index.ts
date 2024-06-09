@@ -8,15 +8,15 @@ import { webhookRoutes } from "./webhooks";
 
 export async function registerRoutes(app: FastifyInstance) {
   try {
-    await app.register(
-      async (app) => {
-        app.addHook("onRequest", authenticate);
-        fileRoutes(app);
-      },
-      { prefix: "/uploads" }
-    );
+    // await app.register(
+    //   async (app) => {
+    //     app.addHook("onRequest", authenticate);
+    //     fileRoutes(app);
+    //   },
+    //   { prefix: "/uploads" }
+    // );
 
-    // await app.register(fileRoutes, { prefix: "/uploads" }); // Route without middleware
+    await app.register(fileRoutes, { prefix: "/uploads" }); // Route without middleware
 
     await app.register(
       async (app) => {

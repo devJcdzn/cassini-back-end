@@ -106,7 +106,7 @@ export async function getFile(request: FastifyRequest, reply: FastifyReply) {
     { expiresIn: 600 }
   );
 
-  reply.code(200).send({ signedUrl });
+  reply.code(301).redirect(signedUrl);
 }
 
 export async function getRecentFiles(

@@ -15,30 +15,12 @@ import {
   isFileAllowed,
   isFileSizeAllowed,
 } from "../lib/utils/file-check";
+import { basicSub } from "../lib/utils/subscriptions";
 
 export async function uploadFile(request: FastifyRequest, reply: FastifyReply) {
   const { name, contentType, size } = uploadBodySchema.parse(request.body);
-  // const userId = request.user?.id;
 
   try {
-    // Logic to add e user owner for a file
-    // const user = await prisma.user.findUnique({
-    //   where: {
-    //     id: userId,
-    //   },
-    //   include: {
-    //     File: true,
-    //   },
-    // });
-
-    // if (!user) {
-    //   return reply.status(401).send({
-    //     error: "Unauthorized",
-    //     message: null,
-    //     data: null,
-    //   });
-    // }
-
     const fileIsAllowed =
       isFileAllowed(contentType, bannedMimeTypes) && isFileSizeAllowed(size);
 
@@ -62,7 +44,7 @@ export async function uploadFile(request: FastifyRequest, reply: FastifyReply) {
         Key: fileKey,
         ContentType: contentType,
       }),
-      { expiresIn: 600 }
+      { expiresIn: 300 }
     );
 
     const file = await prisma.file.create({
@@ -70,7 +52,6 @@ export async function uploadFile(request: FastifyRequest, reply: FastifyReply) {
         name,
         contentType,
         key: fileKey,
-        // ownerId: user.id,
       },
     });
 
@@ -90,6 +71,7 @@ export async function uploadFile(request: FastifyRequest, reply: FastifyReply) {
 
 export async function getFile(request: FastifyRequest, reply: FastifyReply) {
   const { id } = getUploadsParamsSchema.parse(request.params);
+  const maxDownloadTimeLimit = 60 * 60 * 24 * 7; // 7 days
 
   const file = await prisma.file.findUniqueOrThrow({
     where: {
@@ -97,63 +79,93 @@ export async function getFile(request: FastifyRequest, reply: FastifyReply) {
     },
   });
 
+  const currentDate = new Date();
+  const fileCreationDate = new Date(file.createdAt);
+  const difference = currentDate.getTime() - fileCreationDate.getTime();
+  const daysDifference = difference / (1000 * 3600 * 24);
+
+  if (daysDifference >= 7) {
+    await prisma.file.delete({
+      where: { id },
+    });
+
+    return reply.code(403).send({
+      error: "Download time limit exceeded",
+      message: "This file has exceeded the maximum download time limit.",
+    });
+  }
+
+  if (file.downloads >= basicSub.downloadLimit) {
+    return reply.code(403).send({
+      error: "Download limit exceeded",
+      message: "This file has reached the maximum number of downloads.",
+    });
+  }
+
   const signedUrl = await getSignedUrl(
     r2,
     new GetObjectCommand({
       Bucket: "cassini-dev",
       Key: file.key,
     }),
-    { expiresIn: 600 }
+    { expiresIn: maxDownloadTimeLimit }
   );
+
+  await prisma.file.update({
+    where: { id: file.id },
+    data: {
+      downloads: file.downloads + 1,
+    },
+  });
 
   reply.code(301).redirect(signedUrl);
 }
 
-export async function getRecentFiles(
-  request: FastifyRequest,
-  reply: FastifyReply
-) {
-  const user = request?.user;
+// export async function getRecentFiles(
+//   request: FastifyRequest,
+//   reply: FastifyReply
+// ) {
+//   const user = request?.user;
 
-  try {
-    if (!user) {
-      return reply.code(401).send({
-        error: "Unauthorized",
-        message: null,
-        data: null,
-      });
-    }
+//   try {
+//     if (!user) {
+//       return reply.code(401).send({
+//         error: "Unauthorized",
+//         message: null,
+//         data: null,
+//       });
+//     }
 
-    const userExists = await prisma.user.findUnique({
-      where: {
-        id: user.id,
-      },
-      include: {
-        File: {
-          select: {
-            id: true,
-            name: true,
-            owner: {
-              select: {
-                name: true,
-                email: true,
-                id: true,
-              },
-            },
-          },
-        },
-      },
-    });
+//     const userExists = await prisma.user.findUnique({
+//       where: {
+//         id: user.id,
+//       },
+//       include: {
+//         File: {
+//           select: {
+//             id: true,
+//             name: true,
+//             owner: {
+//               select: {
+//                 name: true,
+//                 email: true,
+//                 id: true,
+//               },
+//             },
+//           },
+//         },
+//       },
+//     });
 
-    return reply.send({
-      files: userExists?.File,
-      length: userExists?.File.length,
-    });
-  } catch (err) {
-    return reply.code(500).send({
-      error: "Server Error",
-      message: null,
-      data: null,
-    });
-  }
-}
+//     return reply.send({
+//       files: userExists?.File,
+//       length: userExists?.File.length,
+//     });
+//   } catch (err) {
+//     return reply.code(500).send({
+//       error: "Server Error",
+//       message: null,
+//       data: null,
+//     });
+//   }
+// }
